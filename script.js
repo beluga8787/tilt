@@ -1,28 +1,32 @@
 const music = document.getElementById('bg-music');
 const toggleBtn = document.getElementById('music-toggle');
+const hint = document.getElementById('neon-hint');
 
-// Стартуем сразу
+// --- Скрыть "нажми" при первом взаимодействии ---
+const hideHint = () => {
+  if (hint && !hint.classList.contains('hidden')) {
+    hint.classList.add('hidden');
+    setTimeout(() => hint.remove(), 500);
+  }
+};
+if (hint) hint.addEventListener('click', hideHint);
+
+// --- Автозапуск (замьючено) + анмьют по первому действию ---
 music.volume = 0.6;
-music.muted = true; // обход блокировки автоплея
+music.muted = true;
 
-// Пытаемся включить воспроизведение
 const tryPlay = () => {
   const p = music.play();
   if (p !== undefined) {
     p.then(() => {
-      // Играет (замьючено). Ждём первый клик, чтобы включить звук.
       toggleBtn.innerText = "🔇";
       toggleBtn.classList.add('playing');
-    }).catch(() => {
-      // Совсем не удалось — попробуем ещё раз после действия пользователя
-    });
+    }).catch(() => {});
   }
 };
-
 window.addEventListener('load', tryPlay);
 document.addEventListener('DOMContentLoaded', tryPlay);
 
-// Первое действие пользователя → включаем звук
 const unmute = () => {
   if (music.muted) {
     music.muted = false;
@@ -40,9 +44,10 @@ document.addEventListener('touchstart', unmute);
 document.addEventListener('keydown', unmute);
 document.addEventListener('scroll', unmute);
 
-// Кнопка — вкл/выкл
+// --- Кнопка музыки ---
 toggleBtn.addEventListener('click', (e) => {
-  e.stopPropagation(); // чтобы не триггерить unmute-логику дважды
+  e.stopPropagation();
+  hideHint();
   if (music.paused) {
     music.muted = false;
     music.play().catch(() => {});
