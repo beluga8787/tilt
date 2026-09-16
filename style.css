@@ -1,12 +1,24 @@
+/* ============================================================
+   БАЗА
+   ============================================================ */
+* {
+    box-sizing: border-box;
+}
+
 body {
     background: black;
     margin: 0;
     font-family: 'Segoe UI', system-ui, sans-serif;
     overflow: hidden;
     color: #f5f5f5;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== Оверлей "поверни телефон" ===== */
+/* ============================================================
+   ОВЕРЛЕЙ "ПОВЕРНИ ТЕЛЕФОН"
+   ============================================================ */
 .rotate-overlay {
     display: none;
     position: fixed;
@@ -46,11 +58,13 @@ body {
     .main { display: none; }
 }
 
-/* ===== Кнопка музыки ===== */
+/* ============================================================
+   КНОПКА МУЗЫКИ
+   ============================================================ */
 #music-toggle {
     position: fixed;
-    bottom: 10px;
-    left: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: calc(10px + env(safe-area-inset-left));
     border-radius: 1rem;
     width: 110px;
     height: 38px;
@@ -72,7 +86,9 @@ body {
     box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
 }
 
-/* ===== Фон-видео ===== */
+/* ============================================================
+   ФОНОВОЕ ВИДЕО
+   ============================================================ */
 .body-vid {
     position: fixed;
     top: 0;
@@ -94,14 +110,16 @@ body {
     display: flex;
 }
 
-/* ===== Панель справа — базовый вид (ПК) ===== */
+/* ============================================================
+   ПАНЕЛЬ СПРАВА (базовый вид — ПК)
+   ============================================================ */
 .vov {
     background: rgba(10, 10, 10, 0.55);
     width: 720px;
     position: fixed;
-    top: 30px;
-    right: 50px;
-    bottom: 30px;
+    top: calc(30px + env(safe-area-inset-top));
+    bottom: calc(30px + env(safe-area-inset-bottom));
+    right: calc(50px + env(safe-area-inset-right));
     left: auto;
     border-radius: 1rem;
     padding: 6px;
@@ -124,7 +142,9 @@ body {
 }
 .lis::-webkit-scrollbar { display: none; }
 
-/* ===== Карточки ===== */
+/* ============================================================
+   КАРТОЧКИ
+   ============================================================ */
 .col {
     display: flex;
     flex-direction: column;
@@ -142,9 +162,11 @@ body {
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
     border-color: rgba(255, 255, 255, 0.35);
 }
+
 .col.sad { border-left: 3px solid #b8c4dd; }
 .col.sad .t  { color: #fff; text-shadow: 0 0 12px rgba(184, 196, 221, 0.4); }
 .col.sad .t2 { color: #fff; text-shadow: 0 0 14px rgba(184, 196, 221, 0.65); }
+
 .col.tilt { border-left: 3px solid #ddb8b8; }
 .col.tilt .t  { color: #fff; text-shadow: 0 0 12px rgba(221, 184, 184, 0.4); }
 .col.tilt .t2 { color: #fff; text-shadow: 0 0 14px rgba(221, 184, 184, 0.7); }
@@ -189,7 +211,9 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ===== Планшет (901–1100) ===== */
+/* ============================================================
+   ПЛАНШЕТ (901–1100) — панель шире
+   ============================================================ */
 @media (min-width: 901px) and (max-width: 1100px) {
     .vov {
         width: 90vw;
@@ -198,32 +222,29 @@ body {
     .col { width: 100%; }
 }
 
-/* ============================================================= */
-/* ===== МОБИЛЬНЫЙ ЛАНДШАФТ — уменьшенная копия ПК ============= */
-/* Срабатывает по ШИРИНЕ (≤1000px) ИЛИ по ВЫСОТЕ (≤550px)      */
-/* ============================================================= */
-
+/* ============================================================
+   МОБИЛЬНЫЙ ЛАНДШАФТ — уменьшенная копия ПК
+   Панель сбоку, видео видно слева, всё мелкое.
+   ============================================================ */
 @media (orientation: landscape) and (max-width: 1000px),
        (orientation: landscape) and (max-height: 550px) {
 
-    /* Кнопка музыки компактнее */
     #music-toggle {
         width: 60px !important;
         height: 26px !important;
         font-size: 0.72rem !important;
-        bottom: 6px !important;
-        left: 6px !important;
+        bottom: calc(6px + env(safe-area-inset-bottom)) !important;
+        left: calc(6px + env(safe-area-inset-left)) !important;
         margin: 6px !important;
     }
 
-    /* Панель — сбоку справа. НЕ растягивается на весь экран. */
     .vov {
         width: 42vw !important;
         min-width: 300px !important;
         max-width: 480px !important;
-        top: 8px !important;
-        bottom: 8px !important;
-        right: 8px !important;
+        top: calc(8px + env(safe-area-inset-top)) !important;
+        bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+        right: calc(8px + env(safe-area-inset-right)) !important;
         left: auto !important;
         border-radius: 12px !important;
         padding: 4px !important;
@@ -236,7 +257,6 @@ body {
         height: 96% !important;
     }
 
-    /* Карточки — две колонки */
     .col {
         width: 48.7% !important;
         min-height: 55vh !important;
@@ -252,7 +272,9 @@ body {
     .des { gap: 5px !important; }
 }
 
-/* ===== Совсем узкий ландшафт (640×360 и подобные) ===== */
+/* ============================================================
+   СОВСЕМ УЗКИЙ ЛАНДШАФТ (640×360 и подобные)
+   ============================================================ */
 @media (orientation: landscape) and (max-width: 700px) and (max-height: 400px) {
     .vov {
         width: 48vw !important;
