@@ -41,7 +41,7 @@ body {
     60%, 100% { transform: rotate(90deg); }
 }
 
-/* Показываем оверлей только на телефоне в портретной ориентации */
+/* Показываем оверлей только на телефоне в портрете */
 @media (max-width: 900px) and (orientation: portrait) {
     .rotate-overlay {
         display: flex;
@@ -98,11 +98,10 @@ body {
     display: flex;
 }
 
-/* ===== Панель справа ===== */
+/* ===== Панель справа (как на ПК) ===== */
 .vov {
     background: rgba(10, 10, 10, 0.55);
     width: 720px;
-    height: auto;
     position: fixed;
     top: 30px;
     right: 50px;
@@ -216,7 +215,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ===== Планшеты (ширина 900–1100) ===== */
+/* ===== Планшеты (ширина 901–1100) ===== */
 @media (max-width: 1100px) and (min-width: 901px) {
     .vov {
         width: 90vw;
@@ -227,23 +226,29 @@ body {
     }
 }
 
-/* ===== Телефон в ЛАНДШАФТЕ — компактная раскладка ===== */
+/* ================================================= */
+/* ===== ТЕЛЕФОН В ЛАНДШАФТЕ — уменьшенная копия ПК ===== */
+/* ================================================= */
 @media (max-width: 900px) and (orientation: landscape) {
+
+    /* Кнопка музыки — компактнее */
     #music-toggle {
-        width: 70px;
-        height: 30px;
-        font-size: 0.85rem;
+        width: 60px;
+        height: 26px;
+        font-size: 0.75rem;
         bottom: 4px;
         left: 4px;
         margin: 4px;
     }
 
+    /* Панель — как на ПК: справа, не на весь экран */
     .vov {
-        top: 8px;
-        bottom: 8px;
-        right: 8px;
-        left: 8px;
-        width: auto;
+        width: 62vw;
+        max-width: 560px;
+        top: 10px;
+        bottom: 10px;
+        right: 10px;
+        left: auto;
         border-radius: 12px;
         padding: 4px;
     }
@@ -254,11 +259,12 @@ body {
         padding-right: 2px;
     }
 
+    /* Карточки — две колонки, как на ПК, только меньше */
     .col {
         width: 48.7%;
-        min-height: 62vh;
-        padding: 14px 12px;
-        border-radius: 12px;
+        min-height: 58vh;
+        padding: 12px 10px;
+        border-radius: 10px;
     }
 
     .title {
@@ -266,39 +272,44 @@ body {
     }
 
     .t {
-        font-size: 1.05rem;
-        line-height: 1.25;
+        font-size: 0.92rem;
+        line-height: 1.2;
+        letter-spacing: 0.2px;
     }
 
     .des {
-        gap: 6px;
+        gap: 5px;
     }
 
     .t1 {
-        font-size: 0.85rem;
-        line-height: 1.45;
+        font-size: 0.68rem;
+        line-height: 1.4;
     }
 
     .t2 {
-        font-size: 1rem;
+        font-size: 0.88rem;
         padding-top: 6px;
+        padding-right: 4px;
     }
 }
 
-/* ===== Очень узкий ландшафт (например 640×360) ===== */
+/* ===== Очень маленький ландшафт (640×360 и подобное) ===== */
 @media (max-width: 700px) and (orientation: landscape) {
+    .vov {
+        width: 66vw;
+    }
     .col {
-        min-height: 68vh;
-        padding: 12px 10px;
+        min-height: 62vh;
+        padding: 10px 8px;
     }
     .t {
-        font-size: 0.95rem;
+        font-size: 0.82rem;
     }
     .t1 {
-        font-size: 0.78rem;
-        line-height: 1.4;
+        font-size: 0.62rem;
+        line-height: 1.35;
     }
     .t2 {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 }
