@@ -108,15 +108,7 @@ body {
     50%      { opacity: 0.7; }
 }
 
-.btn-row {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-#music-toggle,
-.tg-btn,
-.fs-btn {
+.tg-btn {
     width: 56px;
     height: 38px;
     border-radius: 1rem;
@@ -131,17 +123,11 @@ body {
     justify-content: center;
     text-decoration: none;
     box-sizing: border-box;
-    font-family: inherit;
     transform: translateZ(0);
 }
-#music-toggle:hover,
-.tg-btn:hover,
-.fs-btn:hover {
+.tg-btn:hover {
     background: rgba(50, 50, 50, 0.9);
     border-color: rgba(255, 255, 255, 0.6);
-}
-.fs-btn.active {
-    background: rgba(255, 255, 255, 0.2);
 }
 
 /* ============================================================
@@ -226,13 +212,13 @@ video::-webkit-media-text-track-container {
 }
 .tab-btn {
     flex: 1;
-    padding: 10px 8px;
+    padding: 10px 6px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     color: #b8b8b8;
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 600;
     letter-spacing: 0.3px;
     cursor: pointer;
@@ -471,6 +457,68 @@ video::-webkit-media-text-track-container {
 }
 
 /* ============================================================
+   НАСТРОЙКИ
+   ============================================================ */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.settings-btn {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    color: #f5f5f5;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+.settings-btn:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateX(4px);
+}
+.settings-icon {
+    font-size: 1.6rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.settings-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.settings-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+.settings-state {
+    font-size: 0.9rem;
+    color: #a8a8a8;
+}
+.settings-btn.playing {
+    border-color: rgba(184, 196, 221, 0.5);
+    box-shadow: 0 0 20px rgba(184, 196, 221, 0.15);
+}
+.settings-btn.active {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================
    ПЛАНШЕТ (901–1100)
    ============================================================ */
 @media (min-width: 901px) and (max-width: 1100px) {
@@ -487,7 +535,6 @@ video::-webkit-media-text-track-container {
 @media (orientation: landscape) and (max-width: 1000px),
        (orientation: landscape) and (max-height: 550px) {
 
-    /* Убираем backdrop-filter — самый тяжёлый эффект на телефоне */
     .vov {
         background: rgba(10, 10, 10, 0.88);
         backdrop-filter: none !important;
@@ -503,20 +550,25 @@ video::-webkit-media-text-track-container {
         padding: 4px !important;
     }
 
-    /* Убираем дорогие тени и transition у карточек */
     .col,
     .shop-row,
-    .link-row {
+    .link-row,
+    .settings-btn {
         box-shadow: none !important;
+    }
+    .col,
+    .shop-row,
+    .link-row,
+    .settings-btn {
         transition: none !important;
     }
     .col:hover,
     .shop-row:hover,
-    .link-row:hover {
+    .link-row:hover,
+    .settings-btn:hover {
         transform: none !important;
     }
 
-    /* Уменьшаем свечения текста — они дорого стоят */
     .col.sad .t,
     .col.sad .t2,
     .col.tilt .t,
@@ -526,7 +578,6 @@ video::-webkit-media-text-track-container {
         text-shadow: none !important;
     }
 
-    /* Отключаем пульсацию неона, оставляем статичное свечение */
     .neon-hint {
         animation: none !important;
         text-shadow:
@@ -535,7 +586,6 @@ video::-webkit-media-text-track-container {
             0 0 18px #7ab8ff !important;
     }
 
-    /* Отключаем анимацию иконки поворота */
     .rotate-icon {
         animation-duration: 3s !important;
     }
@@ -550,23 +600,20 @@ video::-webkit-media-text-track-container {
         letter-spacing: 2px !important;
         padding: 2px 8px !important;
     }
-    #music-toggle,
-    .tg-btn,
-    .fs-btn {
+    .tg-btn {
         width: 42px !important;
         height: 28px !important;
         font-size: 0.75rem !important;
     }
-    .btn-row { gap: 6px !important; }
 
     .tabs {
-        gap: 4px !important;
+        gap: 3px !important;
         padding: 6px 6px 8px 6px !important;
     }
     .tab-btn {
-        padding: 7px 4px !important;
-        font-size: 0.72rem !important;
-        border-radius: 8px !important;
+        padding: 7px 3px !important;
+        font-size: 0.62rem !important;
+        border-radius: 7px !important;
         transition: none !important;
     }
 
@@ -576,7 +623,6 @@ video::-webkit-media-text-track-container {
         padding-right: 2px !important;
     }
 
-    /* content-visibility помогает браузеру не рендерить карточки за экраном */
     .col {
         content-visibility: auto;
         contain-intrinsic-size: 400px 200px;
@@ -603,6 +649,12 @@ video::-webkit-media-text-track-container {
     .link-icon { width: 34px !important; height: 34px !important; font-size: 1.2rem !important; }
     .link-name { font-size: 0.92rem !important; }
     .link-handle { font-size: 0.75rem !important; }
+
+    .settings-list { gap: 10px !important; }
+    .settings-btn { padding: 12px 14px !important; gap: 12px !important; }
+    .settings-icon { width: 34px !important; height: 34px !important; font-size: 1.2rem !important; }
+    .settings-name { font-size: 0.92rem !important; }
+    .settings-state { font-size: 0.72rem !important; }
 }
 
 /* ============================================================
@@ -614,7 +666,7 @@ video::-webkit-media-text-track-container {
         min-width: 320px !important;
         max-width: 480px !important;
     }
-    .tab-btn { font-size: 0.65rem !important; padding: 6px 3px !important; }
+    .tab-btn { font-size: 0.55rem !important; padding: 6px 2px !important; }
     .col { min-height: 60vh !important; padding: 12px 10px !important; }
     .t  { font-size: 0.92rem !important; }
     .t1 { font-size: 0.7rem !important; line-height: 1.4 !important; }
