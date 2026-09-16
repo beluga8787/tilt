@@ -16,6 +16,8 @@ tabButtons.forEach(btn => {
 // ===== Музыка =====
 const music = document.getElementById('bg-music');
 const toggleBtn = document.getElementById('music-toggle');
+const toggleIcon = toggleBtn.querySelector('.settings-icon');
+const toggleState = document.getElementById('music-state');
 const hint = document.getElementById('neon-hint');
 
 const hideHint = () => {
@@ -29,13 +31,27 @@ if (hint) hint.addEventListener('click', hideHint);
 music.volume = 0.6;
 music.muted = true;
 
+// Обновление вида кнопки музыки в настройках
+const updateMusicUI = () => {
+  if (music.paused) {
+    toggleIcon.innerText = '🎵';
+    if (toggleState) toggleState.innerText = 'Выключена';
+    toggleBtn.classList.remove('playing');
+  } else if (music.muted) {
+    toggleIcon.innerText = '🔇';
+    if (toggleState) toggleState.innerText = 'Без звука';
+    toggleBtn.classList.add('playing');
+  } else {
+    toggleIcon.innerText = '⏸';
+    if (toggleState) toggleState.innerText = 'Играет';
+    toggleBtn.classList.add('playing');
+  }
+};
+
 const tryPlay = () => {
   const p = music.play();
   if (p !== undefined) {
-    p.then(() => {
-      toggleBtn.innerText = "🔇";
-      toggleBtn.classList.add('playing');
-    }).catch(() => {});
+    p.then(() => updateMusicUI()).catch(() => {});
   }
 };
 window.addEventListener('load', tryPlay);
@@ -45,8 +61,7 @@ const unmute = () => {
   if (music.muted) {
     music.muted = false;
     music.play().catch(() => {});
-    toggleBtn.innerText = "⏸";
-    toggleBtn.classList.add('playing');
+    updateMusicUI();
   }
   document.removeEventListener('click', unmute);
   document.removeEventListener('touchstart', unmute);
@@ -64,17 +79,16 @@ toggleBtn.addEventListener('click', (e) => {
   if (music.paused) {
     music.muted = false;
     music.play().catch(() => {});
-    toggleBtn.innerText = "⏸";
-    toggleBtn.classList.add('playing');
   } else {
     music.pause();
-    toggleBtn.innerText = "🎵";
-    toggleBtn.classList.remove('playing');
   }
+  updateMusicUI();
 });
 
 // ===== Полноэкранный режим =====
 const fsBtn = document.getElementById('fullscreen-toggle');
+const fsIcon = fsBtn.querySelector('.settings-icon');
+const fsState = document.getElementById('fs-state');
 
 const isFullscreen = () =>
   document.fullscreenElement ||
@@ -96,33 +110,33 @@ const exitFs = () => {
   if (document.msExitFullscreen) return document.msExitFullscreen();
 };
 
-if (fsBtn) {
-  fsBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hideHint();
-    if (!isFullscreen()) {
-      const p = requestFs(document.documentElement);
-      if (p && p.catch) p.catch(() => {});
-    } else {
-      exitFs();
-    }
-  });
-}
+fsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  hideHint();
+  if (!isFullscreen()) {
+    const p = requestFs(document.documentElement);
+    if (p && p.catch) p.catch(() => {});
+  } else {
+    exitFs();
+  }
+});
 
 const syncFsBtn = () => {
-  if (!fsBtn) return;
   if (isFullscreen()) {
+    fsIcon.innerText = '⛗';
+    if (fsState) fsState.innerText = 'Включён';
     fsBtn.classList.add('active');
-    fsBtn.innerText = '⛗';
   } else {
+    fsIcon.innerText = '⛶';
+    if (fsState) fsState.innerText = 'Выключен';
     fsBtn.classList.remove('active');
-    fsBtn.innerText = '⛶';
   }
 };
 document.addEventListener('fullscreenchange', syncFsBtn);
 document.addEventListener('webkitfullscreenchange', syncFsBtn);
 document.addEventListener('mozfullscreenchange', syncFsBtn);
 document.addEventListener('MSFullscreenChange', syncFsBtn);
+syncFsBtn();
 
 // ===== Автофуллскрин на телефонах при первом тапе =====
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -150,18 +164,6 @@ if (bgVideo) {
       bgVideo.play().catch(() => {});
     }
   });
-
-  // Пауза при потере фокуса окна (переключение на другое приложение)
   window.addEventListener('blur', () => bgVideo.pause());
   window.addEventListener('focus', () => bgVideo.play().catch(() => {}));
 }
-
-// ===== ОПТИМИЗАЦИЯ: пауза музыки, когда страница не видна =====
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    // music.pause(); // раскомментируй, если хочешь чтобы музыка вставала
-  }
-});
-
-// ===== ОПТИМИЗАЦИЯ: ограничение FPS для анимаций на слабых устройствах =====
-// (просто подсказка браузеру через CSS will-change уже включена)
