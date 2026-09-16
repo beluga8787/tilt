@@ -25,7 +25,11 @@
     <div class="main">
 
         <div class="body-vid">
-            <video autoplay muted loop playsinline src="video/back.mp4"></video>
+            <video autoplay muted loop playsinline webkit-playsinline
+                   disablepictureinpicture disableremoteplayback
+                   controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+                   x-webkit-airplay="deny"
+                   src="video/back.mp4"></video>
         </div>
 
         <!-- Кнопки внизу слева: неоновая надпись + музыка + телеграм -->
