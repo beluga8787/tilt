@@ -1,0 +1,304 @@
+body {
+    background: black;
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    color: #f5f5f5;
+}
+
+/* ===== Оверлей "поверни телефон" ===== */
+.rotate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    gap: 14px;
+}
+.rotate-icon {
+    font-size: 5rem;
+    animation: rotateHint 2.2s ease-in-out infinite;
+}
+.rotate-text {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #f5f5f5;
+    letter-spacing: 0.5px;
+}
+.rotate-sub {
+    font-size: 1rem;
+    color: #a8a8a8;
+    font-weight: 400;
+}
+
+@keyframes rotateHint {
+    0%, 40%   { transform: rotate(0deg); }
+    60%, 100% { transform: rotate(90deg); }
+}
+
+/* Показываем оверлей только на телефоне в портретной ориентации */
+@media (max-width: 900px) and (orientation: portrait) {
+    .rotate-overlay {
+        display: flex;
+    }
+    .main {
+        display: none;
+    }
+}
+
+/* ===== Кнопка музыки ===== */
+#music-toggle {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    border-radius: 1rem;
+    width: 110px;
+    height: 38px;
+    margin: 10px;
+    z-index: 10;
+    cursor: pointer;
+    background: rgba(20, 20, 20, 0.8);
+    color: #f5f5f5;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 1rem;
+    transition: 0.25s ease;
+    backdrop-filter: blur(6px);
+}
+#music-toggle:hover {
+    background: rgba(50, 50, 50, 0.9);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+#music-toggle.playing {
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+}
+
+/* ===== Фон-видео ===== */
+.body-vid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+.body-vid video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main {
+    display: flex;
+}
+
+/* ===== Панель справа ===== */
+.vov {
+    background: rgba(10, 10, 10, 0.55);
+    width: 720px;
+    height: auto;
+    position: fixed;
+    top: 30px;
+    right: 50px;
+    bottom: 30px;
+    border-radius: 1rem;
+    padding: 6px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lis {
+    display: flex;
+    margin: 10px;
+    height: 97%;
+    gap: 12px;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    scrollbar-width: none;
+    border-radius: 1rem;
+    align-content: flex-start;
+    padding-right: 4px;
+}
+.lis::-webkit-scrollbar {
+    display: none;
+}
+
+/* ===== Карточки ===== */
+.col {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(160deg, #1a1a1a, #0a0a0a);
+    width: 49%;
+    min-height: 24rem;
+    border-radius: 1rem;
+    padding: 20px 18px;
+    box-sizing: border-box;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.col:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.col.sad {
+    border-left: 3px solid #b8c4dd;
+}
+.col.sad .t {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(184, 196, 221, 0.4);
+}
+.col.sad .t2 {
+    color: #ffffff;
+    text-shadow: 0 0 14px rgba(184, 196, 221, 0.65);
+}
+
+.col.tilt {
+    border-left: 3px solid #ddb8b8;
+}
+.col.tilt .t {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(221, 184, 184, 0.4);
+}
+.col.tilt .t2 {
+    color: #ffffff;
+    text-shadow: 0 0 14px rgba(221, 184, 184, 0.7);
+}
+
+.title {
+    height: auto;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.t {
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+.des {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.t1 {
+    font-size: 1.08rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin: 0;
+    color: #d8d8d8;
+    letter-spacing: 0.15px;
+}
+
+.t2 {
+    margin-top: auto;
+    text-align: right;
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-style: italic;
+    padding-right: 6px;
+    padding-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* ===== Планшеты (ширина 900–1100) ===== */
+@media (max-width: 1100px) and (min-width: 901px) {
+    .vov {
+        width: 90vw;
+        right: 5vw;
+    }
+    .col {
+        width: 100%;
+    }
+}
+
+/* ===== Телефон в ЛАНДШАФТЕ — компактная раскладка ===== */
+@media (max-width: 900px) and (orientation: landscape) {
+    #music-toggle {
+        width: 70px;
+        height: 30px;
+        font-size: 0.85rem;
+        bottom: 4px;
+        left: 4px;
+        margin: 4px;
+    }
+
+    .vov {
+        top: 8px;
+        bottom: 8px;
+        right: 8px;
+        left: 8px;
+        width: auto;
+        border-radius: 12px;
+        padding: 4px;
+    }
+
+    .lis {
+        margin: 6px;
+        gap: 8px;
+        padding-right: 2px;
+    }
+
+    .col {
+        width: 48.7%;
+        min-height: 62vh;
+        padding: 14px 12px;
+        border-radius: 12px;
+    }
+
+    .title {
+        margin-bottom: 10px;
+    }
+
+    .t {
+        font-size: 1.05rem;
+        line-height: 1.25;
+    }
+
+    .des {
+        gap: 6px;
+    }
+
+    .t1 {
+        font-size: 0.85rem;
+        line-height: 1.45;
+    }
+
+    .t2 {
+        font-size: 1rem;
+        padding-top: 6px;
+    }
+}
+
+/* ===== Очень узкий ландшафт (например 640×360) ===== */
+@media (max-width: 700px) and (orientation: landscape) {
+    .col {
+        min-height: 68vh;
+        padding: 12px 10px;
+    }
+    .t {
+        font-size: 0.95rem;
+    }
+    .t1 {
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+    .t2 {
+        font-size: 0.9rem;
+    }
+}
