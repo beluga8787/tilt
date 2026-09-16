@@ -35,7 +35,6 @@ body {
     color: #a8a8a8;
     font-weight: 400;
 }
-
 @keyframes rotateHint {
     0%, 40%   { transform: rotate(0deg); }
     60%, 100% { transform: rotate(90deg); }
@@ -73,7 +72,7 @@ body {
     box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
 }
 
-/* ===== Фон-видео (занимает весь экран на любом устройстве) ===== */
+/* ===== Фон-видео ===== */
 .body-vid {
     position: fixed;
     top: 0;
@@ -95,7 +94,7 @@ body {
     display: flex;
 }
 
-/* ===== Панель справа — как на ПК ===== */
+/* ===== Панель справа — базовый вид (ПК) ===== */
 .vov {
     background: rgba(10, 10, 10, 0.55);
     width: 720px;
@@ -103,10 +102,12 @@ body {
     top: 30px;
     right: 50px;
     bottom: 30px;
+    left: auto;
     border-radius: 1rem;
     padding: 6px;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    box-sizing: border-box;
 }
 
 .lis {
@@ -121,9 +122,7 @@ body {
     align-content: flex-start;
     padding-right: 4px;
 }
-.lis::-webkit-scrollbar {
-    display: none;
-}
+.lis::-webkit-scrollbar { display: none; }
 
 /* ===== Карточки ===== */
 .col {
@@ -143,30 +142,12 @@ body {
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
     border-color: rgba(255, 255, 255, 0.35);
 }
-
-.col.sad {
-    border-left: 3px solid #b8c4dd;
-}
-.col.sad .t {
-    color: #ffffff;
-    text-shadow: 0 0 12px rgba(184, 196, 221, 0.4);
-}
-.col.sad .t2 {
-    color: #ffffff;
-    text-shadow: 0 0 14px rgba(184, 196, 221, 0.65);
-}
-
-.col.tilt {
-    border-left: 3px solid #ddb8b8;
-}
-.col.tilt .t {
-    color: #ffffff;
-    text-shadow: 0 0 12px rgba(221, 184, 184, 0.4);
-}
-.col.tilt .t2 {
-    color: #ffffff;
-    text-shadow: 0 0 14px rgba(221, 184, 184, 0.7);
-}
+.col.sad { border-left: 3px solid #b8c4dd; }
+.col.sad .t  { color: #fff; text-shadow: 0 0 12px rgba(184, 196, 221, 0.4); }
+.col.sad .t2 { color: #fff; text-shadow: 0 0 14px rgba(184, 196, 221, 0.65); }
+.col.tilt { border-left: 3px solid #ddb8b8; }
+.col.tilt .t  { color: #fff; text-shadow: 0 0 12px rgba(221, 184, 184, 0.4); }
+.col.tilt .t2 { color: #fff; text-shadow: 0 0 14px rgba(221, 184, 184, 0.7); }
 
 .title {
     height: auto;
@@ -174,7 +155,6 @@ body {
     display: flex;
     align-items: flex-start;
 }
-
 .t {
     font-size: 1.55rem;
     font-weight: 700;
@@ -182,7 +162,6 @@ body {
     margin: 0;
     letter-spacing: 0.3px;
 }
-
 .des {
     display: flex;
     flex-direction: column;
@@ -191,7 +170,6 @@ body {
     margin-left: 4px;
     margin-right: 4px;
 }
-
 .t1 {
     font-size: 1.08rem;
     font-weight: 400;
@@ -200,7 +178,6 @@ body {
     color: #d8d8d8;
     letter-spacing: 0.15px;
 }
-
 .t2 {
     margin-top: auto;
     text-align: right;
@@ -212,103 +189,78 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ===== Планшеты (901–1100) — панель чуть шире экрана ===== */
+/* ===== Планшет (901–1100) ===== */
 @media (min-width: 901px) and (max-width: 1100px) {
     .vov {
         width: 90vw;
         right: 5vw;
     }
-    .col {
-        width: 100%;
-    }
+    .col { width: 100%; }
 }
 
-/* ======================================================= */
-/* ===== ТЕЛЕФОН В ЛАНДШАФТЕ — уменьшенная копия ПК ====== */
-/* ======================================================= */
-@media (orientation: landscape) and (max-height: 500px) {
+/* ============================================================= */
+/* ===== МОБИЛЬНЫЙ ЛАНДШАФТ — уменьшенная копия ПК ============= */
+/* Срабатывает по ШИРИНЕ (≤1000px) ИЛИ по ВЫСОТЕ (≤550px)      */
+/* ============================================================= */
+
+@media (orientation: landscape) and (max-width: 1000px),
+       (orientation: landscape) and (max-height: 550px) {
 
     /* Кнопка музыки компактнее */
     #music-toggle {
-        width: 60px;
-        height: 26px;
-        font-size: 0.72rem;
-        bottom: 6px;
-        left: 6px;
-        margin: 6px;
+        width: 60px !important;
+        height: 26px !important;
+        font-size: 0.72rem !important;
+        bottom: 6px !important;
+        left: 6px !important;
+        margin: 6px !important;
     }
 
-    /* Панель — сбоку справа. Видео видно слева. */
+    /* Панель — сбоку справа. НЕ растягивается на весь экран. */
     .vov {
-        width: 55vw;
-        max-width: 520px;
-        min-width: 340px;
-        top: 10px;
-        bottom: 10px;
-        right: 10px;
-        left: auto;
-        border-radius: 12px;
-        padding: 4px;
+        width: 42vw !important;
+        min-width: 300px !important;
+        max-width: 480px !important;
+        top: 8px !important;
+        bottom: 8px !important;
+        right: 8px !important;
+        left: auto !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
     }
 
     .lis {
-        margin: 6px;
-        gap: 8px;
-        padding-right: 2px;
+        margin: 6px !important;
+        gap: 8px !important;
+        padding-right: 2px !important;
+        height: 96% !important;
     }
 
-    /* Карточки — две колонки, как на ПК */
+    /* Карточки — две колонки */
     .col {
-        width: 48.7%;
-        min-height: 55vh;
-        padding: 12px 10px;
-        border-radius: 10px;
+        width: 48.7% !important;
+        min-height: 55vh !important;
+        padding: 12px 10px !important;
+        border-radius: 10px !important;
     }
 
-    .title {
-        margin-bottom: 10px;
-    }
+    .title { margin-bottom: 10px !important; }
 
-    .t {
-        font-size: 0.92rem;
-        line-height: 1.2;
-        letter-spacing: 0.2px;
-    }
-
-    .des {
-        gap: 5px;
-    }
-
-    .t1 {
-        font-size: 0.68rem;
-        line-height: 1.4;
-    }
-
-    .t2 {
-        font-size: 0.88rem;
-        padding-top: 6px;
-        padding-right: 4px;
-    }
+    .t  { font-size: 0.92rem !important; line-height: 1.2 !important; }
+    .t1 { font-size: 0.68rem !important; line-height: 1.4 !important; }
+    .t2 { font-size: 0.88rem !important; padding-top: 6px !important; padding-right: 4px !important; }
+    .des { gap: 5px !important; }
 }
 
-/* ===== Очень узкий ландшафт (например 640×360) ===== */
-@media (orientation: landscape) and (max-height: 400px) {
+/* ===== Совсем узкий ландшафт (640×360 и подобные) ===== */
+@media (orientation: landscape) and (max-width: 700px) and (max-height: 400px) {
     .vov {
-        width: 58vw;
-        min-width: 300px;
+        width: 48vw !important;
+        min-width: 260px !important;
+        max-width: 380px !important;
     }
-    .col {
-        min-height: 60vh;
-        padding: 10px 8px;
-    }
-    .t {
-        font-size: 0.82rem;
-    }
-    .t1 {
-        font-size: 0.62rem;
-        line-height: 1.35;
-    }
-    .t2 {
-        font-size: 0.8rem;
-    }
+    .col { min-height: 60vh !important; padding: 10px 8px !important; }
+    .t  { font-size: 0.82rem !important; }
+    .t1 { font-size: 0.62rem !important; line-height: 1.35 !important; }
+    .t2 { font-size: 0.8rem !important; }
 }
