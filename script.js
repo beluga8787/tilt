@@ -5,10 +5,8 @@ const tabPanes = document.querySelectorAll('.tab-pane');
 tabButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.tab;
-
     tabButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     tabPanes.forEach(pane => {
       pane.classList.toggle('active', pane.id === target);
     });
@@ -85,7 +83,7 @@ const isFullscreen = () =>
   document.msFullscreenElement;
 
 const requestFs = (el) => {
-  if (el.requestFullscreen) return el.requestFullscreen();
+  if (el.requestFullscreen) return el.requestFullscreen({ navigationUI: 'hide' });
   if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
   if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
   if (el.msRequestFullscreen) return el.msRequestFullscreen();
@@ -141,3 +139,29 @@ if (isMobile) {
   document.addEventListener('touchstart', autoFs, { once: true, passive: true });
   document.addEventListener('click', autoFs, { once: true });
 }
+
+// ===== ОПТИМИЗАЦИЯ: пауза видео, когда страница не видна =====
+const bgVideo = document.querySelector('.body-vid video');
+if (bgVideo) {
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      bgVideo.pause();
+    } else {
+      bgVideo.play().catch(() => {});
+    }
+  });
+
+  // Пауза при потере фокуса окна (переключение на другое приложение)
+  window.addEventListener('blur', () => bgVideo.pause());
+  window.addEventListener('focus', () => bgVideo.play().catch(() => {}));
+}
+
+// ===== ОПТИМИЗАЦИЯ: пауза музыки, когда страница не видна =====
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // music.pause(); // раскомментируй, если хочешь чтобы музыка вставала
+  }
+});
+
+// ===== ОПТИМИЗАЦИЯ: ограничение FPS для анимаций на слабых устройствах =====
+// (просто подсказка браузеру через CSS will-change уже включена)
