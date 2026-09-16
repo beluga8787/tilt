@@ -1,8 +1,25 @@
+// ===== Вкладки =====
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabPanes = document.querySelectorAll('.tab-pane');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+
+    tabButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    tabPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === target);
+    });
+  });
+});
+
+// ===== Музыка =====
 const music = document.getElementById('bg-music');
 const toggleBtn = document.getElementById('music-toggle');
 const hint = document.getElementById('neon-hint');
 
-// --- Скрыть "нажми" при первом взаимодействии ---
 const hideHint = () => {
   if (hint && !hint.classList.contains('hidden')) {
     hint.classList.add('hidden');
@@ -11,7 +28,6 @@ const hideHint = () => {
 };
 if (hint) hint.addEventListener('click', hideHint);
 
-// --- Автозапуск (замьючено) + анмьют по первому действию ---
 music.volume = 0.6;
 music.muted = true;
 
@@ -44,7 +60,6 @@ document.addEventListener('touchstart', unmute);
 document.addEventListener('keydown', unmute);
 document.addEventListener('scroll', unmute);
 
-// --- Кнопка музыки ---
 toggleBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   hideHint();
