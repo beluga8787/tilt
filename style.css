@@ -52,14 +52,13 @@ body {
     60%, 100% { transform: rotate(90deg); }
 }
 
-/* Показываем оверлей только на телефоне в портрете */
 @media (orientation: portrait) and (max-width: 900px) {
     .rotate-overlay { display: flex; }
     .main { display: none; }
 }
 
 /* ============================================================
-   НИЖНИЙ ЛЕВЫЙ УГОЛ: неоновая надпись + кнопки
+   НИЖНИЙ ЛЕВЫЙ УГОЛ
    ============================================================ */
 .bottom-left {
     position: fixed;
@@ -72,7 +71,6 @@ body {
     gap: 10px;
 }
 
-/* Неоновая надпись "нажми" */
 .neon-hint {
     font-size: 1.1rem;
     font-weight: 700;
@@ -119,14 +117,12 @@ body {
     }
 }
 
-/* Ряд с двумя кнопками */
 .btn-row {
     display: flex;
     flex-direction: row;
     gap: 10px;
 }
 
-/* Кнопка музыки и телеграм */
 #music-toggle,
 .tg-btn {
     width: 56px;
@@ -174,10 +170,6 @@ body {
     object-fit: cover;
     display: block;
 }
-
-/* ============================================================
-   СКРЫВАЕМ НАТИВНЫЕ КОНТРОЛЫ ВИДЕО (в т.ч. iPhone)
-   ============================================================ */
 video {
     pointer-events: none;
     -webkit-user-select: none;
@@ -204,12 +196,10 @@ video::-webkit-media-text-track-container {
     display: none !important;
 }
 
-.main {
-    display: flex;
-}
+.main { display: flex; }
 
 /* ============================================================
-   ПАНЕЛЬ СПРАВА (базовый вид — ПК)
+   ПАНЕЛЬ СПРАВА (ПК)
    ============================================================ */
 .vov {
     background: rgba(10, 10, 10, 0.55);
@@ -223,26 +213,73 @@ video::-webkit-media-text-track-container {
     padding: 6px;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
+/* ===== ВЕРХНЯЯ ПАНЕЛЬ ВКЛАДОК ===== */
+.tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    padding: 8px 8px 10px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+.tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #b8b8b8;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+}
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.18);
+}
+
+/* ===== КОНТЕНТ ВКЛАДОК ===== */
+.tab-content {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+}
+.tab-pane {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.tab-pane::-webkit-scrollbar { display: none; }
+.tab-pane.active { display: block; }
+
+/* ============================================================
+   МЫСЛИ — карточки
+   ============================================================ */
 .lis {
     display: flex;
     margin: 10px;
-    height: 97%;
     gap: 12px;
     flex-wrap: wrap;
-    overflow-y: auto;
-    scrollbar-width: none;
-    border-radius: 1rem;
     align-content: flex-start;
     padding-right: 4px;
 }
-.lis::-webkit-scrollbar { display: none; }
 
-/* ============================================================
-   КАРТОЧКИ
-   ============================================================ */
 .col {
     display: flex;
     flex-direction: column;
@@ -260,11 +297,9 @@ video::-webkit-media-text-track-container {
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
     border-color: rgba(255, 255, 255, 0.35);
 }
-
 .col.sad { border-left: 3px solid #b8c4dd; }
 .col.sad .t  { color: #fff; text-shadow: 0 0 12px rgba(184, 196, 221, 0.4); }
 .col.sad .t2 { color: #fff; text-shadow: 0 0 14px rgba(184, 196, 221, 0.65); }
-
 .col.tilt { border-left: 3px solid #ddb8b8; }
 .col.tilt .t  { color: #fff; text-shadow: 0 0 12px rgba(221, 184, 184, 0.4); }
 .col.tilt .t2 { color: #fff; text-shadow: 0 0 14px rgba(221, 184, 184, 0.7); }
@@ -310,6 +345,144 @@ video::-webkit-media-text-track-container {
 }
 
 /* ============================================================
+   ОБЩИЕ СТИЛИ ДЛЯ СТРАНИЦ (Обо мне / Покупки / Ссылки)
+   ============================================================ */
+.page {
+    padding: 26px 30px 40px 30px;
+}
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 22px 0;
+    letter-spacing: 0.3px;
+    text-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+}
+.page-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #cfcfcf;
+    margin: 18px 0 0 0;
+}
+.page-text.dim {
+    color: #7a7a7a;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* Обо мне */
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+.info-label {
+    font-size: 0.95rem;
+    color: #9a9a9a;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.info-value {
+    font-size: 1.15rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Покупки */
+.shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.shop-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: linear-gradient(160deg, #1a1a1a, #0a0a0a);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #ddb8b8;
+    border-radius: 12px;
+    transition: 0.2s ease;
+}
+.shop-row:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
+}
+.shop-name {
+    font-size: 1.08rem;
+    color: #f0f0f0;
+    font-weight: 500;
+}
+.shop-price {
+    font-size: 1.08rem;
+    color: #fff;
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: 0 0 10px rgba(221, 184, 184, 0.55);
+}
+
+/* Ссылки */
+.link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.link-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: linear-gradient(160deg, #1a1a1a, #0a0a0a);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s ease;
+}
+.link-row:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.12);
+    transform: translateX(4px);
+}
+.link-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+}
+.link-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.link-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+.link-handle {
+    font-size: 0.9rem;
+    color: #a8a8a8;
+}
+
+/* ============================================================
    ПЛАНШЕТ (901–1100) — панель шире
    ============================================================ */
 @media (min-width: 901px) and (max-width: 1100px) {
@@ -342,15 +515,12 @@ video::-webkit-media-text-track-container {
         height: 28px !important;
         font-size: 0.75rem !important;
     }
-    .btn-row {
-        gap: 6px !important;
-    }
+    .btn-row { gap: 6px !important; }
 
-    /* панель ШИРЕ: 58vw, минимум 380, максимум 640 */
     .vov {
-        width: 58vw !important;
-        min-width: 380px !important;
-        max-width: 640px !important;
+        width: 62vw !important;
+        min-width: 400px !important;
+        max-width: 680px !important;
         top: calc(8px + env(safe-area-inset-top)) !important;
         bottom: calc(8px + env(safe-area-inset-bottom)) !important;
         right: calc(8px + env(safe-area-inset-right)) !important;
@@ -359,27 +529,47 @@ video::-webkit-media-text-track-container {
         padding: 4px !important;
     }
 
+    .tabs {
+        gap: 4px !important;
+        padding: 6px 6px 8px 6px !important;
+    }
+    .tab-btn {
+        padding: 7px 4px !important;
+        font-size: 0.72rem !important;
+        border-radius: 8px !important;
+    }
+
     .lis {
         margin: 6px !important;
         gap: 8px !important;
         padding-right: 2px !important;
-        height: 96% !important;
     }
 
-    /* колонки шире и текст чуть крупнее */
     .col {
         width: 48.7% !important;
         min-height: 55vh !important;
         padding: 14px 12px !important;
         border-radius: 10px !important;
     }
-
     .title { margin-bottom: 10px !important; }
-
     .t  { font-size: 1rem !important;    line-height: 1.25 !important; }
     .t1 { font-size: 0.78rem !important; line-height: 1.45 !important; }
     .t2 { font-size: 0.95rem !important; padding-top: 6px !important; padding-right: 4px !important; }
     .des { gap: 6px !important; }
+
+    /* страницы Обо мне / Покупки / Ссылки */
+    .page { padding: 16px 18px 24px 18px !important; }
+    .page-title { font-size: 1.25rem !important; margin-bottom: 14px !important; }
+    .page-text { font-size: 0.82rem !important; line-height: 1.5 !important; margin-top: 12px !important; }
+    .info-row { padding: 9px 12px !important; }
+    .info-label { font-size: 0.7rem !important; }
+    .info-value { font-size: 0.9rem !important; }
+    .shop-row { padding: 10px 12px !important; }
+    .shop-name, .shop-price { font-size: 0.88rem !important; }
+    .link-row { padding: 10px 12px !important; gap: 12px !important; }
+    .link-icon { width: 34px !important; height: 34px !important; font-size: 1.2rem !important; }
+    .link-name { font-size: 0.92rem !important; }
+    .link-handle { font-size: 0.75rem !important; }
 }
 
 /* ============================================================
@@ -387,12 +577,15 @@ video::-webkit-media-text-track-container {
    ============================================================ */
 @media (orientation: landscape) and (max-width: 700px) and (max-height: 400px) {
     .vov {
-        width: 62vw !important;
-        min-width: 320px !important;
-        max-width: 500px !important;
+        width: 66vw !important;
+        min-width: 340px !important;
+        max-width: 520px !important;
     }
+    .tab-btn { font-size: 0.65rem !important; padding: 6px 3px !important; }
     .col { min-height: 60vh !important; padding: 12px 10px !important; }
     .t  { font-size: 0.92rem !important; }
     .t1 { font-size: 0.7rem !important; line-height: 1.4 !important; }
     .t2 { font-size: 0.88rem !important; }
+    .page-title { font-size: 1.05rem !important; }
+    .page-text { font-size: 0.75rem !important; }
 }
