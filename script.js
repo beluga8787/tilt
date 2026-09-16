@@ -74,3 +74,70 @@ toggleBtn.addEventListener('click', (e) => {
     toggleBtn.classList.remove('playing');
   }
 });
+
+// ===== Полноэкранный режим =====
+const fsBtn = document.getElementById('fullscreen-toggle');
+
+const isFullscreen = () =>
+  document.fullscreenElement ||
+  document.webkitFullscreenElement ||
+  document.mozFullScreenElement ||
+  document.msFullscreenElement;
+
+const requestFs = (el) => {
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+  if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+  if (el.msRequestFullscreen) return el.msRequestFullscreen();
+};
+
+const exitFs = () => {
+  if (document.exitFullscreen) return document.exitFullscreen();
+  if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+  if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+  if (document.msExitFullscreen) return document.msExitFullscreen();
+};
+
+if (fsBtn) {
+  fsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hideHint();
+    if (!isFullscreen()) {
+      const p = requestFs(document.documentElement);
+      if (p && p.catch) p.catch(() => {});
+    } else {
+      exitFs();
+    }
+  });
+}
+
+const syncFsBtn = () => {
+  if (!fsBtn) return;
+  if (isFullscreen()) {
+    fsBtn.classList.add('active');
+    fsBtn.innerText = '⛗';
+  } else {
+    fsBtn.classList.remove('active');
+    fsBtn.innerText = '⛶';
+  }
+};
+document.addEventListener('fullscreenchange', syncFsBtn);
+document.addEventListener('webkitfullscreenchange', syncFsBtn);
+document.addEventListener('mozfullscreenchange', syncFsBtn);
+document.addEventListener('MSFullscreenChange', syncFsBtn);
+
+// ===== Автофуллскрин на телефонах при первом тапе =====
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+if (isMobile) {
+  const autoFs = () => {
+    if (!isFullscreen()) {
+      const p = requestFs(document.documentElement);
+      if (p && p.catch) p.catch(() => {});
+    }
+    document.removeEventListener('touchstart', autoFs);
+    document.removeEventListener('click', autoFs);
+  };
+  document.addEventListener('touchstart', autoFs, { once: true, passive: true });
+  document.addEventListener('click', autoFs, { once: true });
+}
