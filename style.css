@@ -501,6 +501,7 @@ video::-webkit-media-text-track-container { display: none !important; }
     width: 90vw;
     height: 90vh;
     max-width: 1200px;
+    max-height: 700px;
     border-radius: 10px;
     background: #000;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
@@ -627,6 +628,7 @@ video::-webkit-media-text-track-container { display: none !important; }
     .lightbox iframe {
         width: 95vw !important;
         height: 85vh !important;
+        max-height: none !important;
     }
 }
 
