@@ -436,6 +436,7 @@ video::-webkit-media-text-track-container { display: none !important; }
 }
 
 /* Видео-превью */
+.gallery-item.video-item img,
 .gallery-item.video-item video {
     width: 100%;
     height: 100%;
@@ -495,6 +496,15 @@ video::-webkit-media-text-track-container { display: none !important; }
     cursor: default;
     outline: none;
     pointer-events: auto;
+}
+.lightbox iframe {
+    width: 90vw;
+    height: 90vh;
+    max-width: 1200px;
+    border-radius: 10px;
+    background: #000;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    border: none;
 }
 
 /* ============================================================
@@ -612,6 +622,11 @@ video::-webkit-media-text-track-container { display: none !important; }
         width: 34px !important;
         height: 34px !important;
         font-size: 0.8rem !important;
+    }
+
+    .lightbox iframe {
+        width: 95vw !important;
+        height: 85vh !important;
     }
 }
 
