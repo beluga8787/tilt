@@ -1,17 +1,110 @@
+// ============================================================
+// НАСТРОЙКА ГАЛЕРЕИ
+// Впиши сюда имена своих файлов из папки photos/
+// Пример: 'photos/1.jpg', 'photos/me.png', 'photos/cat.jpeg'
+// ============================================================
+const PHOTOS = [
+  'photos/1.jpg',
+  'photos/2.jpg',
+  'photos/3.jpg',
+  'photos/4.jpg',
+  // добавь свои фото
+];
+
+const PROMO_CODE = 'канфу';
+const PROMO_KEY = 'promo_unlocked';
+
 // ===== Вкладки =====
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabPanes = document.querySelectorAll('.tab-pane');
 
+const activateTab = (target) => {
+  tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === target));
+  tabPanes.forEach(pane => pane.classList.toggle('active', pane.id === target));
+};
+
 tabButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.tab;
-    tabButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    tabPanes.forEach(pane => {
-      pane.classList.toggle('active', pane.id === target);
-    });
-  });
+  btn.addEventListener('click', () => activateTab(btn.dataset.tab));
 });
+
+// ===== ГАЛЕРЕЯ =====
+const galleryGrid = document.getElementById('gallery-grid');
+const galleryEmpty = document.getElementById('gallery-empty');
+const galleryTabBtn = document.getElementById('gallery-tab-btn');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+
+const buildGallery = () => {
+  if (!galleryGrid) return;
+  galleryGrid.innerHTML = '';
+
+  if (!PHOTOS.length) {
+    if (galleryEmpty) galleryEmpty.style.display = 'block';
+    return;
+  }
+  if (galleryEmpty) galleryEmpty.style.display = 'none';
+
+  PHOTOS.forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.addEventListener('click', () => {
+      lightboxImg.src = src;
+      lightbox.classList.add('open');
+    });
+    img.addEventListener('error', () => img.remove());
+    galleryGrid.appendChild(img);
+  });
+};
+
+const unlockGallery = () => {
+  if (galleryTabBtn) galleryTabBtn.style.display = '';
+  buildGallery();
+};
+
+if (lightbox) {
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  });
+}
+
+// ===== ПРОМОКОД =====
+const promoInput = document.getElementById('promo-input');
+const promoBtn = document.getElementById('promo-btn');
+const promoMsg = document.getElementById('promo-msg');
+
+const checkPromo = () => {
+  const value = (promoInput.value || '').trim().toLowerCase();
+  if (value === PROMO_CODE) {
+    promoMsg.innerText = '✓ Открыто! Галерея разблокирована.';
+    promoMsg.className = 'promo-msg ok';
+    localStorage.setItem(PROMO_KEY, '1');
+    unlockGallery();
+    setTimeout(() => activateTab('gallery'), 500);
+  } else {
+    promoMsg.innerText = '✗ Неверный код';
+    promoMsg.className = 'promo-msg err';
+    setTimeout(() => {
+      promoMsg.innerText = '';
+      promoMsg.className = 'promo-msg';
+    }, 2500);
+  }
+};
+
+if (promoBtn) promoBtn.addEventListener('click', checkPromo);
+if (promoInput) {
+  promoInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPromo();
+  });
+}
+
+// Проверка при загрузке — если уже был разблокирован
+if (localStorage.getItem(PROMO_KEY) === '1') {
+  unlockGallery();
+}
 
 // ===== Музыка =====
 const music = document.getElementById('bg-music');
@@ -31,7 +124,6 @@ if (hint) hint.addEventListener('click', hideHint);
 music.volume = 0.6;
 music.muted = true;
 
-// Обновление вида кнопки музыки в настройках
 const updateMusicUI = () => {
   if (music.paused) {
     toggleIcon.innerText = '🎵';
@@ -50,9 +142,7 @@ const updateMusicUI = () => {
 
 const tryPlay = () => {
   const p = music.play();
-  if (p !== undefined) {
-    p.then(() => updateMusicUI()).catch(() => {});
-  }
+  if (p !== undefined) p.then(() => updateMusicUI()).catch(() => {});
 };
 window.addEventListener('load', tryPlay);
 document.addEventListener('DOMContentLoaded', tryPlay);
@@ -85,7 +175,7 @@ toggleBtn.addEventListener('click', (e) => {
   updateMusicUI();
 });
 
-// ===== Полноэкранный режим =====
+// ===== Полный экран =====
 const fsBtn = document.getElementById('fullscreen-toggle');
 const fsIcon = fsBtn.querySelector('.settings-icon');
 const fsState = document.getElementById('fs-state');
@@ -138,7 +228,7 @@ document.addEventListener('mozfullscreenchange', syncFsBtn);
 document.addEventListener('MSFullscreenChange', syncFsBtn);
 syncFsBtn();
 
-// ===== Автофуллскрин на телефонах при первом тапе =====
+// ===== Автофуллскрин на телефонах =====
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
 if (isMobile) {
@@ -154,15 +244,12 @@ if (isMobile) {
   document.addEventListener('click', autoFs, { once: true });
 }
 
-// ===== ОПТИМИЗАЦИЯ: пауза видео, когда страница не видна =====
+// ===== Оптимизация: пауза видео, когда страница не видна =====
 const bgVideo = document.querySelector('.body-vid video');
 if (bgVideo) {
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      bgVideo.pause();
-    } else {
-      bgVideo.play().catch(() => {});
-    }
+    if (document.hidden) bgVideo.pause();
+    else bgVideo.play().catch(() => {});
   });
   window.addEventListener('blur', () => bgVideo.pause());
   window.addEventListener('focus', () => bgVideo.play().catch(() => {}));
