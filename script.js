@@ -1,17 +1,22 @@
 // ============================================================
-// НАСТРОЙКА ГАЛЕРЕИ
-// Впиши сюда имена своих файлов из папки photos/
-// Пример: 'photos/1.jpg', 'photos/me.png', 'photos/cat.jpeg'
+// АВТО-ГАЛЕРЕЯ
+// Фото: photos/pop1.jpg, photos/pop2.png, photos/pop3.jpeg ...
+// Видео: video/vid1.mp4, video/vid2.webm ...
+// Нумерация идёт подряд с 1. Как только 3 номера подряд не найдены —
+// поиск останавливается.
 // ============================================================
-const PHOTOS = [
-  'photos/1.jpg',
-  'photos/2.jpg',
-  'photos/3.jpg',
-  'photos/4.jpg',
-  // добавь свои фото
-];
 
-const PROMO_CODE = 'канфу';
+const PHOTO_PREFIX = 'photos/pop';
+const PHOTO_EXTS   = ['jpg', 'png', 'jpeg', 'webp'];
+
+const VIDEO_PREFIX = 'video/vid';
+const VIDEO_EXTS   = ['mp4', 'webm', 'mov', 'm4v'];
+
+const MAX_INDEX         = 200; // максимум номеров
+const STOP_AFTER_FAILS  = 3;   // сколько пустых номеров подряд — стоп
+
+// ===== ВОПРОС-ПРОВЕРКА =====
+const SECRET_ANSWER = 'спокойствие';
 const PROMO_KEY = 'promo_unlocked';
 
 // ===== Вкладки =====
@@ -28,35 +33,156 @@ tabButtons.forEach(btn => {
 });
 
 // ===== ГАЛЕРЕЯ =====
-const galleryGrid = document.getElementById('gallery-grid');
-const galleryEmpty = document.getElementById('gallery-empty');
+const galleryPhotos = document.getElementById('gallery-photos');
+const galleryVideos = document.getElementById('gallery-videos');
+const photosEmpty = document.getElementById('photos-empty');
+const videosEmpty = document.getElementById('videos-empty');
 const galleryTabBtn = document.getElementById('gallery-tab-btn');
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
+const lightboxVideo = document.getElementById('lightbox-video');
 
-const buildGallery = () => {
-  if (!galleryGrid) return;
-  galleryGrid.innerHTML = '';
+// Проверка одного фото-URL
+const probeImage = (src) => new Promise((resolve) => {
+  const img = new Image();
+  img.onload = () => resolve(src);
+  img.onerror = () => resolve(null);
+  img.src = src;
+});
 
-  if (!PHOTOS.length) {
-    if (galleryEmpty) galleryEmpty.style.display = 'block';
+// Проверка одного видео-URL
+const probeVideo = (src) => new Promise((resolve) => {
+  const v = document.createElement('video');
+  v.preload = 'metadata';
+  v.muted = true;
+  let done = false;
+  const ok = () => { if (!done) { done = true; resolve(src); } };
+  const fail = () => { if (!done) { done = true; resolve(null); } };
+  v.addEventListener('loadedmetadata', ok);
+  v.addEventListener('error', fail);
+  v.src = src;
+  // на всякий случай — таймаут
+  setTimeout(fail, 4000);
+});
+
+// Поиск одного файла по номеру (перебираем расширения)
+const findFile = async (prefix, index, exts, probe) => {
+  for (const ext of exts) {
+    const src = `${prefix}${index}.${ext}`;
+    const found = await probe(src);
+    if (found) return found;
+  }
+  return null;
+};
+
+// Полный проход по номерам
+const scanMedia = async (prefix, exts, probe) => {
+  const results = [];
+  let fails = 0;
+
+  for (let i = 1; i <= MAX_INDEX; i++) {
+    const src = await findFile(prefix, i, exts, probe);
+    if (src) {
+      results.push(src);
+      fails = 0;
+    } else {
+      fails++;
+      if (fails >= STOP_AFTER_FAILS) break;
+    }
+  }
+  return results;
+};
+
+// Рендер фото
+const renderPhotos = (list) => {
+  galleryPhotos.innerHTML = '';
+  if (!list.length) {
+    if (photosEmpty) photosEmpty.style.display = 'block';
     return;
   }
-  if (galleryEmpty) galleryEmpty.style.display = 'none';
-
-  PHOTOS.forEach(src => {
+  if (photosEmpty) photosEmpty.style.display = 'none';
+  list.forEach(src => {
     const img = document.createElement('img');
     img.src = src;
     img.alt = '';
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.addEventListener('click', () => {
-      lightboxImg.src = src;
-      lightbox.classList.add('open');
-    });
-    img.addEventListener('error', () => img.remove());
-    galleryGrid.appendChild(img);
+    img.addEventListener('click', () => openLightbox(src, false));
+    galleryPhotos.appendChild(img);
   });
+};
+
+// Рендер видео
+const renderVideos = (list) => {
+  galleryVideos.innerHTML = '';
+  if (!list.length) {
+    if (videosEmpty) videosEmpty.style.display = 'block';
+    return;
+  }
+  if (videosEmpty) videosEmpty.style.display = 'none';
+  list.forEach(src => {
+    const wrap = document.createElement('div');
+    wrap.className = 'gallery-item video-item';
+
+    const vid = document.createElement('video');
+    vid.src = src;
+    vid.muted = true;
+    vid.playsInline = true;
+    vid.preload = 'metadata';
+    vid.setAttribute('webkit-playsinline', '');
+    vid.addEventListener('loadeddata', () => {
+      try { vid.currentTime = 0.1; } catch (e) {}
+    });
+
+    const playIcon = document.createElement('span');
+    playIcon.className = 'play-badge';
+    playIcon.innerText = '▶';
+
+    wrap.appendChild(vid);
+    wrap.appendChild(playIcon);
+    wrap.addEventListener('click', () => openLightbox(src, true));
+    galleryVideos.appendChild(wrap);
+  });
+};
+
+// Автопоиск
+const buildGallery = async () => {
+  if (!galleryPhotos || !galleryVideos) return;
+  galleryPhotos.innerHTML = '<p class="page-text dim">// ищу фото...</p>';
+  galleryVideos.innerHTML = '<p class="page-text dim">// ищу видео...</p>';
+
+  const [photos, videos] = await Promise.all([
+    scanMedia(PHOTO_PREFIX, PHOTO_EXTS, probeImage),
+    scanMedia(VIDEO_PREFIX, VIDEO_EXTS, probeVideo),
+  ]);
+
+  renderPhotos(photos);
+  renderVideos(videos);
+};
+
+const openLightbox = (src, video) => {
+  if (video) {
+    lightboxImg.style.display = 'none';
+    lightboxImg.src = '';
+    lightboxVideo.style.display = 'block';
+    lightboxVideo.src = src;
+    lightboxVideo.currentTime = 0;
+    lightboxVideo.play().catch(() => {});
+  } else {
+    lightboxVideo.style.display = 'none';
+    lightboxVideo.pause();
+    lightboxVideo.src = '';
+    lightboxImg.style.display = 'block';
+    lightboxImg.src = src;
+  }
+  lightbox.classList.add('open');
+};
+
+const closeLightbox = () => {
+  lightbox.classList.remove('open');
+  lightboxImg.src = '';
+  lightboxVideo.pause();
+  lightboxVideo.src = '';
 };
 
 const unlockGallery = () => {
@@ -65,27 +191,40 @@ const unlockGallery = () => {
 };
 
 if (lightbox) {
-  lightbox.addEventListener('click', () => {
-    lightbox.classList.remove('open');
-    lightboxImg.src = '';
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
   });
 }
 
-// ===== ПРОМОКОД =====
+// ===== Под-вкладки Фото / Видео =====
+const subTabBtns = document.querySelectorAll('.sub-tab-btn');
+const subPanes = document.querySelectorAll('.sub-pane');
+
+subTabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.sub;
+    subTabBtns.forEach(b => b.classList.toggle('active', b === btn));
+    subPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === 'sub-' + target);
+    });
+  });
+});
+
+// ===== ВОПРОС-ПРОВЕРКА =====
 const promoInput = document.getElementById('promo-input');
 const promoBtn = document.getElementById('promo-btn');
 const promoMsg = document.getElementById('promo-msg');
 
 const checkPromo = () => {
   const value = (promoInput.value || '').trim().toLowerCase();
-  if (value === PROMO_CODE) {
-    promoMsg.innerText = '✓ Открыто! Галерея разблокирована.';
+  if (value === SECRET_ANSWER) {
+    promoMsg.innerText = '✓ Верно. Галерея разблокирована.';
     promoMsg.className = 'promo-msg ok';
     localStorage.setItem(PROMO_KEY, '1');
     unlockGallery();
     setTimeout(() => activateTab('gallery'), 500);
   } else {
-    promoMsg.innerText = '✗ Неверный код';
+    promoMsg.innerText = '✗ Неверно';
     promoMsg.className = 'promo-msg err';
     setTimeout(() => {
       promoMsg.innerText = '';
@@ -101,7 +240,6 @@ if (promoInput) {
   });
 }
 
-// Проверка при загрузке — если уже был разблокирован
 if (localStorage.getItem(PROMO_KEY) === '1') {
   unlockGallery();
 }
