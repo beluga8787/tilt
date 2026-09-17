@@ -10,12 +10,10 @@ const STOP_AFTER_FAILS   = 3;
 
 // ===== ВИДЕО (внешние ссылки) =====
 const VIDEOS = [
-  { type: 'youtube', id: 'Lqf7GXSJZmU' },
-  { type: 'youtube', id: 'MJx8nFw5kGU' },
-  { type: 'youtube', id: 'KNmIrhR_Kys' },
+
   { type: 'youtube', id: '-O4fWJp3Kc4' },
-  { type: 'youtube', id: 'UHt1cxzsawU' },
-  { type: 'vk', url: 'https://vkvideo.ru/video1038426307_456239017?list=ln-c84hNvLutGv2P9LpWo' },
+
+
 ];
 
 // ===== ВОПРОС-ПРОВЕРКА =====
