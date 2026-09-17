@@ -9,11 +9,19 @@ const MAX_PHOTO_INDEX    = 200;
 const STOP_AFTER_FAILS   = 3;
 
 // ===== ВИДЕО (внешние ссылки) =====
+// YouTube: достаточно id (то что после shorts/ или watch?v=)
+// VK: нужны oid и id из кода встраивания + опционально hash
+//     Как получить: на странице видео → «Поделиться» → «Встроить» → скопировать значения
 const VIDEOS = [
-
   { type: 'youtube', id: '-O4fWJp3Kc4' },
 
-
+  // Пример VK (замени на свои значения):
+  {
+     type: 'vk',
+     oid: '1038426307',
+     id: '456239017',
+     hash: ''
+  },
 ];
 
 // ===== ВОПРОС-ПРОВЕРКА =====
@@ -115,9 +123,8 @@ const renderVideos = (list) => {
     let thumbUrl = '';
     if (item.type === 'youtube') {
       thumbUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
-    } else {
-      // VK: используем заглушку (можно заменить на своё превью)
-      thumbUrl = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="100%" height="100%" fill="%23141414"/><text x="50%" y="50%" font-size="24" fill="%23ffffff" text-anchor="middle" dominant-baseline="middle">VK Video</text></svg>';
+    } else if (item.type === 'vk') {
+      thumbUrl = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="100%" height="100%" fill="%23141414"/><text x="50%" y="50%" font-size="22" fill="%23ffffff" text-anchor="middle" dominant-baseline="middle">VK Video</text></svg>';
     }
 
     const img = document.createElement('img');
@@ -136,9 +143,8 @@ const renderVideos = (list) => {
     wrap.addEventListener('click', () => {
       if (item.type === 'youtube') {
         openLightbox(item.id, 'youtube');
-      } else {
-        // VK открываем в новой вкладке
-        window.open(item.url, '_blank');
+      } else if (item.type === 'vk') {
+        openLightbox(item, 'vk');
       }
     });
 
@@ -159,7 +165,6 @@ const buildGallery = async () => {
 
 // --- Лайтбокс ---
 const openLightbox = (src, type) => {
-  // Скрываем всё
   lightboxImg.style.display = 'none';
   lightboxVideo.style.display = 'none';
   if (lightboxIframe) lightboxIframe.style.display = 'none';
@@ -175,6 +180,12 @@ const openLightbox = (src, type) => {
   } else if (type === 'youtube') {
     lightboxIframe.style.display = 'block';
     lightboxIframe.src = `https://www.youtube.com/embed/${src}?autoplay=1`;
+  } else if (type === 'vk') {
+    // src — объект { type, oid, id, hash }
+    lightboxIframe.style.display = 'block';
+    let url = `https://vk.com/video_ext.php?oid=${src.oid}&id=${src.id}&hd=2`;
+    if (src.hash) url += `&hash=${src.hash}`;
+    lightboxIframe.src = url;
   }
 
   lightbox.classList.add('open');
