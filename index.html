@@ -319,11 +319,11 @@
 
                         </div>
 
-                        <!-- Промокод -->
+                        <!-- Вопрос-проверка -->
                         <div class="promo-block">
-                            <h2 class="promo-title">Промокод</h2>
+                            <h2 class="promo-title">Что я люблю больше всего?</h2>
                             <div class="promo-row">
-                                <input id="promo-input" type="text" class="promo-input" placeholder="Введи код..." autocomplete="off" spellcheck="false">
+                                <input id="promo-input" type="text" class="promo-input" placeholder="Твой ответ..." autocomplete="off" spellcheck="false">
                                 <button id="promo-btn" class="promo-btn">OK</button>
                             </div>
                             <p id="promo-msg" class="promo-msg"></p>
@@ -336,10 +336,29 @@
                 <div class="tab-pane" id="gallery">
                     <div class="page">
                         <h1 class="page-title">Галерея</h1>
-                        <div id="gallery-grid" class="gallery-grid"></div>
-                        <p id="gallery-empty" class="page-text dim" style="display:none;">
-                            // пусто. добавь имена файлов в массив PHOTOS в script.js
-                        </p>
+
+                        <!-- под-вкладки -->
+                        <div class="sub-tabs">
+                            <button class="sub-tab-btn active" data-sub="photos">Фото</button>
+                            <button class="sub-tab-btn" data-sub="videos">Видео</button>
+                        </div>
+
+                        <!-- фото -->
+                        <div class="sub-pane active" id="sub-photos">
+                            <div id="gallery-photos" class="gallery-grid"></div>
+                            <p id="photos-empty" class="page-text dim" style="display:none;">
+                                // фото пока нет
+                            </p>
+                        </div>
+
+                        <!-- видео -->
+                        <div class="sub-pane" id="sub-videos">
+                            <div id="gallery-videos" class="gallery-grid"></div>
+                            <p id="videos-empty" class="page-text dim" style="display:none;">
+                                // видео пока нет
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
@@ -351,6 +370,7 @@
     <!-- Лайтбокс -->
     <div id="lightbox" class="lightbox">
         <img id="lightbox-img" src="" alt="">
+        <video id="lightbox-video" controls playsinline webkit-playsinline style="display:none;"></video>
     </div>
 
     <script src="script.js"></script>
