@@ -12,7 +12,7 @@ const STOP_AFTER_FAILS   = 3;
 const VIDEOS = [
 
   { type: 'youtube', id: '-O4fWJp3Kc4' },
-  { type: 'youtube', id: 'SNEngRSMhyg' },
+
 
 ];
 
